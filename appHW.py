@@ -26,6 +26,7 @@ Station = Base.classes.station
 # Design Climate App
 
 #################################################
+
 # Flask Setup
 app = Flask(__name__)
 
@@ -39,20 +40,23 @@ def welcome():
         f'<br/>'
         f'<br/>'
         f'<br/>'
+        f'<br/>'
+        f'<br/>'
+        f'<br/>'
         f'<h1 style="text-align:center">Welcome to the Surfs_Up API!<br/></h1>'
         f'<h2 style="text-align:center">Available Routes (Clickable):<br/></h2>'
         f'<h3 style="text-align:center"><a href="/api/v1.0/precipitation">api/v1.0/precipitation</a><br/></h3>'
         f'<h3 style="text-align:center"><a href="/api/v1.0/stations">api/v1.0/stations</a><br/></h3>'
         f'<h3 style="text-align:center"><a href="/api/v1.0/tobs">api/v1.0/tobs</a><br/></h3>'
-        f'<h3 style="text-align:center"><a href="/api/v1.0/2015-03-14">(Change the date)</a>/api/v1.0/2015-03-14<br/></h3>'
-        f'<h3 style="text-align:center"><a href="/api/v1.0/2011-03-14/2015-03-28">(Change the dates)</a>/api/v1.0/2011-03-14/2015-03-28<br/></h3>'
+        f'<h3 style="text-align:center"><a href="/api/v1.0/2015-03-14">(Start Date)</a><br/></h3>'
+        f'<h3 style="text-align:center"><a href="/api/v1.0/2011-03-14/2015-03-28">(End Date)</a><br/></h3>'
         
     )
 
 
 # Precipitation
-# 1. Convert the query results to a dictionary using date as the key and prcp as the value.
-# 2. Return the JSON representation of your dictionary.
+    # 1. Convert the query results to a dictionary using date as the key and prcp as the value.
+    # 2. Return the JSON representation of your dictionary.
 
 @app.route("/api/v1.0/precipitation")
 def prcp_date():
@@ -70,7 +74,8 @@ def prcp_date():
 
 
 # Stations
-# 1. Return a JSON list of stations from the dataset.
+    # 1. Return a JSON list of stations from the dataset.
+
 @app.route("/api/v1.0/stations")
 def station_list():
     session = Session(engine)
@@ -81,8 +86,8 @@ def station_list():
     return jsonify(all_names)
 
 #tobs
-# 1. Query the dates and temperature observations of the most active station for the last year of data.
-# 2. Return a JSON list of temperature observations (TOBS) for the previous year.
+    # 1. Query the dates and temperature observations of the most active station for the last year of data.
+    # 2. Return a JSON list of temperature observations (TOBS) for the previous year.
 
 @app.route("/api/v1.0/tobs")
 def tob():
@@ -102,8 +107,11 @@ def tob():
 
 
 # /api/v1.0/<start> and /api/v1.0/<start>/<end>
+    # 1. Return a JSON list of the minimum temperature, the average temperature, and the maximum temperature for a given start or start-end range.
+    # 2. When given the start only, calculate TMIN, TAVG, and TMAX for all dates greater than or equal to the start date.
+    # 3. When given the start and the end date, calculate the TMIN, TAVG, and TMAX for dates from the start date through the end date
 
-    
+   
 @app.route("/api/v1.0/<start>")
 def start_day(start):
     session = Session(engine)
@@ -119,7 +127,6 @@ def start_end_day(start,end):
     start_list=list(np.ravel(query_))
     session.close()
     return jsonify(start_list)        
-
 
 
 
